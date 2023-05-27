@@ -1,6 +1,5 @@
 'use client';
 import styles from './form.module.scss';
-import useSWR from 'swr'
 
 const {
   form
@@ -10,7 +9,8 @@ const {
 export interface FormProps {}
 
 async function generateStoryRequest(prompt: string) {
-  console.log("🚀 ~ file: form.tsx:12 ~ prompt:", prompt)
+  console.log("🚀 ~ file: form.tsx:12 ~ prompt:=========", JSON.stringify({prompt}))
+
   try {
     // showSpinner();
 
@@ -24,7 +24,6 @@ async function generateStoryRequest(prompt: string) {
         prompt
       }),
     });
-    console.log("🚀 ~ file: form.tsx:27 ~ response:", response)
 
     // if (!response.ok) {
     //   removeSpinner();
@@ -34,8 +33,10 @@ async function generateStoryRequest(prompt: string) {
     // const data = await response.json();
     // console.log("🚀 ~ file: form.tsx:34 ~ data:", data)
 
+    return response;
+
   } catch (error) {
-  console.log("🚀 ~ file: form.tsx:37 ~ error:", error)
+    console.log("🚀 ~ file: form.tsx:37 ~ error:", error)
 
   }
 }

@@ -10,18 +10,34 @@ const openai = new OpenAIApi(configuration);
 
 export const generateStory = async (req, res) => {
 
-    const { prompt } = req.body;
+    try {
+      const data = await req.json();
+      const { prompt } = data;
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt,
+        max_tokens: 10, // TODO - update to max
+        temperature: 0,
+      });
+      const generatedStory = response.data.choices[0].text;
 
-    // console.log(completion.data.choices[0].message);
+      return generatedStory;
 
-    const response = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt,
-      max_tokens: 7,
-      temperature: 0,
-    });
 
-    return response;
+    } catch (error) {
+
+      if (error.response) {
+        console.log(error.response.status);
+        console.log(error.response.data);
+      } else {
+        console.log(error.message);
+      }
+  
+      // res.status(400).json({
+      //   success: false,
+      //   error: 'The image could not be generated',
+      // });
+    }
 
 }
 
