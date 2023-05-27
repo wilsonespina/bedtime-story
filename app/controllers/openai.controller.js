@@ -16,7 +16,7 @@ export const generateStory = async (req, res) => {
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt,
-        max_tokens: 10, // TODO - update to max
+        max_tokens: 4, // TODO - update to max
         temperature: 0,
       });
       const generatedStory = response.data.choices[0].text;
