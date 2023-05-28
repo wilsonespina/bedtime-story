@@ -9,7 +9,8 @@ export default function ClientSection() {
   const [input, setInput] = useState("");
   const [response, setResponse] = useState<string>("");
 
-  const prompt = `Q: ${input} Generate a response with less than 200 characters.`;
+  const prompt = `Q: ${input} Generate a response with less than 5000 characters.`;
+  // const prompt = `Q: ${input}`;
 
   const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -76,7 +77,7 @@ export default function ClientSection() {
         </button>
       )}
       {response && (
-        <div className="mt-8 rounded-xl border bg-white p-4 shadow-md transition hover:bg-gray-100">
+        <div className="mt-8 rounded-xl border bg-white p-4 shadow-md transition hover:bg-gray-100 text-left">
           {response}
         </div>
       )}

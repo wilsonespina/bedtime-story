@@ -28,7 +28,6 @@ export async function OpenAIStream(payload: OpenAIStreamPayload) {
     const decoder = new TextDecoder();
 
     let counter = 0;
-    console.log("🚀 ~ file: openAIStream.ts:37 ~ OpenAIStream ~ process.env.OPENAI_API_KEY :", process.env.OPENAI_API_KEY )
 
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       headers: {
