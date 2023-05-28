@@ -4,11 +4,6 @@ if (!process.env.OPENAI_API_KEY) {
   throw new Error("Missing env var from OpenAI");
 }
 
-// export const config = {
-//   runtime: "edge",
-// };
-
-
 export const runtime = 'nodejs';
 
 export async function POST(req: Request): Promise<Response> {
@@ -31,7 +26,7 @@ export async function POST(req: Request): Promise<Response> {
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-    max_tokens: 4096,
+    max_tokens: 3000,
     stream: true,
     n: 1,
   };
