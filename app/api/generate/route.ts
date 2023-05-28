@@ -8,9 +8,11 @@ export async function GET(request: Request) {
 export async function POST(req: NextRequest, res: NextResponse) {
   const story = await generateStory(req, res);
 
-  const myBlob = new Blob();
-  const myOptions = { status: 200, statusText: "Story successfully generated!", data: story, };
+  const myBlob = new Blob([`${story.data}`], {type: 'text/plain'});
+
+  // let blob = new Blob(['Hello, world!'], {type: 'text/plain'});
+  const myOptions = { status: 200, statusText: "Story successfully generated!" };
   const myResponse = new Response(myBlob, myOptions);
 
-  return new Response('POST Response', myResponse);
+  return myResponse;
 }

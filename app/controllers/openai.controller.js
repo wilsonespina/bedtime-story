@@ -10,18 +10,20 @@ const openai = new OpenAIApi(configuration);
 
 export const generateStory = async (req, res) => {
 
+  // EXAMPLe how to disp[lay stream data : https://github.com/gopinav/ai/blob/main/examples/javascript-vanilla/stream-response.js
+
     try {
       const data = await req.json();
       const { prompt } = data;
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt,
-        max_tokens: 4, // TODO - update to max
+        max_tokens: 200, // TODO - update to max
         temperature: 0,
+        stream: true,
       });
-      const generatedStory = response.data.choices[0].text;
 
-      return generatedStory;
+      return response;
 
 
     } catch (error) {
@@ -32,11 +34,6 @@ export const generateStory = async (req, res) => {
       } else {
         console.log(error.message);
       }
-  
-      // res.status(400).json({
-      //   success: false,
-      //   error: 'The image could not be generated',
-      // });
     }
 
 }
