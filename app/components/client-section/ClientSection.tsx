@@ -18,60 +18,56 @@ export default function ClientSection() {
 
   const prompt = `Q:
     Can you make up a bedtime story for a 2-year old called ${name}. Can it include: ${detailsSting(storyDetails)}? Can the moral of the story be ${moral}? Can the story last for ${minutes} minutes?
-    Generate a response with less than 3000 characters.`;
-
+    Generate a response with less than 3000 characters.`; // TODO - memoize
+    
     const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       setResponse("");
       setLoading(true);
 
-      const DATA = {storyDetails}
-      console.log("🚀 ~ file: ClientSection.tsx:29 ~ generateResponse ~ DATA:", DATA)
-      console.log("🚀 ~ file: ClientSection.tsx:22 ~ ClientSection ~ prompt:", prompt)
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt,
+      }),
+    });
 
-    // const response = await fetch("/api/generate", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     prompt,
-    //   }),
-    // });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
 
-    // if (!response.ok) {
-    //   throw new Error(response.statusText);
-    // }
+    // This data is a ReadableStream
+    const data = response.body;
+    if (!data) {
+      return;
+    }
 
-    // // This data is a ReadableStream
-    // const data = response.body;
-    // if (!data) {
-    //   return;
-    // }
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
 
-    // const reader = data.getReader();
-    // const decoder = new TextDecoder();
-    // let done = false;
-
-    // while (!done) {
-    //   const { value, done: doneReading } = await reader.read();
-    //   done = doneReading;
-    //   const chunkValue = decoder.decode(value);
-    //   setResponse((prev) => prev + chunkValue);
-    // }
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      setResponse((prev) => prev + chunkValue);
+    }
     setLoading(false);
   };
 
-  const handleCheckbox = (previousState, event:Event) => {
-    const val = event.target.value;
-    console.log("🚀 ~ file: ClientSection.tsx:67 ~ handleCheckbox ~ val:", val)
-    console.log("🚀 ~ file: ClientSection.tsx:69 ~ handleCheckbox ~ event.target.checked:", event.target.checked)
-    console.log("🚀 ~ file: ClientSection.tsx:70 ~ handleCheckbox ~ previousState:", previousState)
-    if (!previousState.includes(val) && event.target.checked) return [...previousState, val];
+  const handleCheckbox = (previousState, event) => {
+    if (!previousState.includes(event.target.value) && event.target.checked) return [...previousState, event.target.value];
+    if (!event.target.checked) {
+      const state = previousState.filter((prev) => {
+        return prev !== event.target.value;
+      });
+      return state;
+    }
     return previousState;
   }
-
-
 
   return (
     <div className="w-full max-w-xl">
@@ -101,13 +97,28 @@ export default function ClientSection() {
             </div>
 
             <div className="focus:ring-neu w-full flex">
-              <input type="checkbox" id="bee" name="elements" value="bee" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
-              <label htmlFor="bee">Bee</label>
+              <input type="checkbox" id="bees" name="elements" value="bees" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
+              <label htmlFor="bees">Bees</label>
             </div>
 
             <div className="focus:ring-neu w-full flex">
               <input type="checkbox" id="mermaid" name="elements" value="mermaid" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
               <label htmlFor="mermaid">Mermaid</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="trains" name="elements" value="trains" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
+              <label htmlFor="trains">Trains</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="cars" name="elements" value="cars" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
+              <label htmlFor="cars">Cars</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="dinosaurs" name="elements" value="dinosaurs" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
+              <label htmlFor="dinosaurs">Dinosaurs</label>
             </div>
 
           </fieldset>
@@ -118,8 +129,14 @@ export default function ClientSection() {
 
           <select id="moral select" onChange={e => setMoral(e.target.value)}>
               <option value="">--Please choose an option--</option>
-              <option value="Always tell the truth">Always tell the truth</option>
-              <option value="Always try your hardest">Always try your hardest</option>
+              <option value="Don&apos;t be greedy, be content with what you have.">Don&apos;t be greedy, be content with what you have.</option>
+              <option value="Beauty comes in all shades">Beauty comes in all shades.</option>
+              <option value="Think before you act.">Think before you act..</option>
+              <option value="Hurtful words cause hurt feelings; Be yourself">Always tell the truth because a liar won&apos;t be trusted..</option>
+              <option value="Hurtful words cause hurt feelings; Be yourself">Hurtful words cause hurt feelings; Be yourself</option>
+              <option value="Where there is a will, there is a way.">Where there is a will, there is a way.</option>
+              <option value="Never give up.">Never give up.</option>
+              <option value=" Knowledge without common sense is useless."> Knowledge without common sense is useless.</option>
           </select>
         </div>
 
