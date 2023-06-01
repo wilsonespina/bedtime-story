@@ -19,60 +19,63 @@ export default function ClientSection() {
   const prompt = `Q:
     Can you make up a bedtime story for a 2-year old called ${name}. Can it include: ${detailsSting(storyDetails)}? Can the moral of the story be ${moral}? Can the story last for ${minutes} minutes?
     Generate a response with less than 3000 characters.`;
-  
-  const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setResponse("");
-    setLoading(true);
 
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        prompt,
-      }),
-    });
+    const generateResponse = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setResponse("");
+      setLoading(true);
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
+      const DATA = {storyDetails}
+      console.log("🚀 ~ file: ClientSection.tsx:29 ~ generateResponse ~ DATA:", DATA)
+      console.log("🚀 ~ file: ClientSection.tsx:22 ~ ClientSection ~ prompt:", prompt)
 
-    // This data is a ReadableStream
-    const data = response.body;
-    if (!data) {
-      return;
-    }
+    // const response = await fetch("/api/generate", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     prompt,
+    //   }),
+    // });
 
-    const reader = data.getReader();
-    const decoder = new TextDecoder();
-    let done = false;
+    // if (!response.ok) {
+    //   throw new Error(response.statusText);
+    // }
 
-    while (!done) {
-      const { value, done: doneReading } = await reader.read();
-      done = doneReading;
-      const chunkValue = decoder.decode(value);
-      setResponse((prev) => prev + chunkValue);
-    }
+    // // This data is a ReadableStream
+    // const data = response.body;
+    // if (!data) {
+    //   return;
+    // }
+
+    // const reader = data.getReader();
+    // const decoder = new TextDecoder();
+    // let done = false;
+
+    // while (!done) {
+    //   const { value, done: doneReading } = await reader.read();
+    //   done = doneReading;
+    //   const chunkValue = decoder.decode(value);
+    //   setResponse((prev) => prev + chunkValue);
+    // }
     setLoading(false);
   };
+
+  const handleCheckbox = (previousState, event:Event) => {
+    const val = event.target.value;
+    console.log("🚀 ~ file: ClientSection.tsx:67 ~ handleCheckbox ~ val:", val)
+    console.log("🚀 ~ file: ClientSection.tsx:69 ~ handleCheckbox ~ event.target.checked:", event.target.checked)
+    console.log("🚀 ~ file: ClientSection.tsx:70 ~ handleCheckbox ~ previousState:", previousState)
+    if (!previousState.includes(val) && event.target.checked) return [...previousState, val];
+    return previousState;
+  }
 
 
 
   return (
     <div className="w-full max-w-xl">
       <form>
-        {/* <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          rows={4}
-          maxLength={1024}
-          className="focus:ring-neu w-full rounded-md border border-neutral-400
-          p-4 text-neutral-900 shadow-sm placeholder:text-neutral-400 focus:border-neutral-900"
-          placeholder={"e.g. What is React?"}
-        /> */}
-
         <div className="focus:ring-neu w-full flex">
           <label htmlFor="name">Child&apos;s name:</label>
           <input type="text" name="name" placeholder="Enter your child's name" onChange={e => setName(e.target.value)}/>
@@ -88,24 +91,24 @@ export default function ClientSection() {
             <legend>Choose elements for the fairytale:</legend>
 
             <div className="focus:ring-neu w-full flex">
-              <input type="checkbox" id="fairies" name="elements" value="fairies" onChange={e => setStoryDetails((prev) => [...prev, e.target.value])} />
+              <input type="checkbox" id="fairies" name="elements" value="fairies" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
               <label htmlFor="fairies">Fairies</label>
             </div>
 
-            {/* <div className="focus:ring-neu w-full flex">
-              <input type="checkbox" id="unicorn" name="elements" value="unicorn" />
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="unicorn" name="elements" value="unicorn" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
               <label htmlFor="unicorn">Unicorn</label>
             </div>
 
             <div className="focus:ring-neu w-full flex">
-              <input type="checkbox" id="bee" name="elements" value="bee" />
+              <input type="checkbox" id="bee" name="elements" value="bee" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
               <label htmlFor="bee">Bee</label>
             </div>
 
             <div className="focus:ring-neu w-full flex">
-              <input type="checkbox" id="mermaid" name="elements" value="mermaid" />
+              <input type="checkbox" id="mermaid" name="elements" value="mermaid" onChange={e => setStoryDetails((prev) => handleCheckbox(prev, e))} />
               <label htmlFor="mermaid">Mermaid</label>
-            </div> */}
+            </div>
 
           </fieldset>
         </div>
