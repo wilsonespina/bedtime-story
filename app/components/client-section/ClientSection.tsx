@@ -70,13 +70,44 @@ export default function ClientSection() {
           placeholder={"e.g. What is React?"}
         />
 
-        <label htmlFor="name">Child&apos;s name:</label>
-        <input type="text" name="name" placeholder="Enter your child's name" />
+        <div className="focus:ring-neu w-full flex">
+          <label htmlFor="name">Child&apos;s name:</label>
+          <input type="text" name="name" placeholder="Enter your child's name" />
+        </div>
 
+        <div className="focus:ring-neu w-full flex">
+          <label htmlFor="minutes">Number of minutes (5-30):</label>
+          <input type="number" id="minutes" name="minutes" min="5" max="30" step={5} defaultValue={5}></input>
+        </div>
 
-        <label htmlFor="minutes">Number of minutes (5-30):</label>
-        <input type="number" id="minutes" name="minutes" min="5" max="30" step={5} defaultValue={5}></input>
+        <div className="focus:ring-neu w-full flex">
+          <fieldset>
+            <legend>Choose elements for the fairytale:</legend>
 
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="fairies" name="fairies" />
+              <label htmlFor="fairies">Fairies</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="unicorn" name="unicorn" />
+              <label htmlFor="unicorn">Unicorn</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="bee" name="bee" />
+              <label htmlFor="bee">Bee</label>
+            </div>
+
+            <div className="focus:ring-neu w-full flex">
+              <input type="checkbox" id="mermaid" name="mermaid" />
+              <label htmlFor="mermaid">Mermaid</label>
+            </div>
+
+          </fieldset>
+        </div>
+
+        
       </form>
 
       {!loading ? (
